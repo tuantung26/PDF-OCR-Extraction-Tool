@@ -13,6 +13,7 @@ This project provides a two-step workflow for splitting a large PDF document int
 - `OCRLLM.py`: The main OCR engine that processes the split pages and generates a combined output.
 - `pages/`: (Generated) Directory containing the split PDF pages.
 - `result.txt`: (Generated) The final combined Markdown extraction.
+- `requirements.txt`: List of Python dependencies.
 
 ## Installation
 
@@ -25,7 +26,7 @@ This project provides a two-step workflow for splitting a large PDF document int
 2. **Install dependencies**:
    Make sure you have Python 3.10+ installed. Then run:
    ```bash
-   pip install pypdf docling easyocr
+   pip install -r requirements.txt
    ```
 
 ## Usage
