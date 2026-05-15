@@ -1,19 +1,22 @@
-# PDF OCR & Extraction Tool
+# PDF OCR & Text Extraction Pipeline
 
-This project provides a two-step workflow for splitting a large PDF document into individual pages and performing high-quality OCR/structure extraction using IBM's Docling and EasyOCR.
+A high-performance document extraction tool that leverages IBM's **Docling** for document structure analysis and **Google Gemini (LLM)** for superior text transcription. This pipeline is optimized for complex PDF layouts and supports multiple languages including Vietnamese and English.
 
 ## Features
-- **PDF Splitting**: Automatically splits a large PDF into individual page files for easier processing.
-- **Advanced OCR**: Uses Docling to extract text and document structure (headings, tables, etc.) into Markdown format.
-- **Vietnamese Support**: Configured to handle both Vietnamese and English text accurately.
-- **OOP Structure**: Clean, reusable Object-Oriented code in `OCRLLM.py`.
+- **Accurate PDF Splitting**: Breaks down large PDF documents into individual pages for efficient batch processing.
+- **LLM-Powered OCR**: Uses Google Gemini 1.5 Flash to "read" PDF pages natively, offering better accuracy for multi-column layouts and tables compared to traditional OCR.
+- **Local OCR Options**: Includes support for EasyOCR and PaddleOCR for users who prefer local execution.
+- **Clean Output**: Automatically converts complex PDF data into structured plain text, removing unnecessary formatting artifacts.
 
 ## Project Structure
-- `test_pypdf.py`: The script used to split the source PDF into individual pages.
-- `OCRLLM.py`: The main OCR engine that processes the split pages and generates a combined output.
+- `test_pypdf.py`: Splits the source PDF into individual page files.
+- `OCRLLM.py`: The primary engine using Google Gemini for text extraction.
+- `OCRDoclingEasyOCR.py`: Local OCR engine using the EasyOCR library.
+- `OCRDoclingPaddle.py`: Local OCR engine using the PaddleOCR/RapidOCR engine.
 - `pages/`: (Generated) Directory containing the split PDF pages.
-- `result.txt`: (Generated) The final combined Markdown extraction.
-- `requirements.txt`: List of Python dependencies.
+- `result.txt`: (Generated) The final combined text extraction from all pages.
+- `requirements.txt`: Project dependencies list.
+- `.env`: (User Created) Stores the Gemini API Key securely.
 
 ## Installation
 
@@ -24,33 +27,51 @@ This project provides a two-step workflow for splitting a large PDF document int
    ```
 
 2. **Install dependencies**:
-   Make sure you have Python 3.10+ installed. Then run:
+   Ensure you have Python 3.10 or higher. Install the required packages via pip:
    ```bash
    pip install -r requirements.txt
    ```
 
+3. **Configure API Key**:
+   Create a file named `.env` in the root directory and add your Google Gemini API key:
+   ```env
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+   *Note: You can get a free key at [Google AI Studio](https://aistudio.google.com/app/apikey).*
+
 ## Usage
 
-### Step 1: Split the PDF
-Open `test_pypdf.py` and update the path to your source PDF file. Then run:
-```bash
-python test_pypdf.py
-```
-This will create a `pages/` folder containing each page as a separate PDF.
+### Step 1: Prepare the PDF
+1. Place your PDF in the project folder.
+2. Update the filename in `test_pypdf.py`.
+3. Run the splitter:
+   ```bash
+   python test_pypdf.py
+   ```
+   This will populate the `pages/` folder with individual PDF pages.
 
-### Step 2: Perform OCR
-Run the main processor to extract text from all pages in the `pages/` folder:
+### Step 2: Execute OCR Extraction
+
+#### Primary Method: Google Gemini (LLM)
+This is the recommended method for the highest accuracy and best handling of Vietnamese text.
 ```bash
 python OCRLLM.py
 ```
-Wait for the process to complete. The final result will be saved in `result.txt`.
+
+#### Alternative: Local Engines
+If you prefer to run the OCR on your local machine without an internet connection (or for privacy reasons), use the local scripts:
+```bash
+# For EasyOCR
+python OCRDoclingEasyOCR.py
+
+# For PaddleOCR
+python OCRDoclingPaddle.py
+```
 
 ## Configuration
-You can modify the OCR settings in `OCRLLM.py` within the `OCR` class constructor:
-```python
-ocr_options = EasyOcrOptions()
-ocr_options.lang = ["vi", "en"] # Add or remove languages here
-```
+You can customize the behavior of the extraction by editing the scripts:
+- **For LLM**: In `OCRLLM.py`, you can modify the `prompt` variable to change how the model interprets the document.
+- **For Local OCR**: In the respective scripts, you can update the `lang` list (e.g., `["vi", "en"]`) to support different languages.
 
 ## License
 MIT
